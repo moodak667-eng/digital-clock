@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Horloge Digitale - Animée</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-clock"></i> Horloge Digitale</h1>
+            <p>Une horloge moderne avec animations et multiple formats</p>
+        </header>
+
+        <div class="clock-container">
+            <!-- Horloge principale -->
+            <div class="clock-display">
+                <div class="time-display">
+                    <div class="time-digits">
+                        <span id="hours">00</span>
+                        <span class="separator">:</span>
+                        <span id="minutes">00</span>
+                        <span class="separator">:</span>
+                        <span id="seconds">00</span>
+                    </div>
+                    <div class="time-period" id="period">AM</div>
+                </div>
+
+                <div class="date-display">
+                    <div class="date-info">
+                        <span id="dayName">Lundi</span>
+                        <span id="day">01</span>
+                        <span id="month">Janvier</span>
+                        <span id="year">2024</span>
+                    </div>
+                </div>
+
+                <!-- Indicateur de batterie (simulé) -->
+                <div class="battery-indicator">
+                    <i class="fas fa-battery-full" id="batteryIcon"></i>
+                    <span id="batteryLevel">100%</span>
+                </div>
+            </div>
+
+            <!-- Horloge analogique -->
+            <div class="analog-clock" id="analogClock">
+                <div class="clock-face">
+                    <div class="hour-marks">
+                        <div class="hour-mark" style="--rotation: 0deg"></div>
+                        <div class="hour-mark" style="--rotation: 30deg"></div>
+                        <div class="hour-mark" style="--rotation: 60deg"></div>
+                        <div class="hour-mark" style="--rotation: 90deg"></div>
+                        <div class="hour-mark" style="--rotation: 120deg"></div>
+                        <div class="hour-mark" style="--rotation: 150deg"></div>
+                        <div class="hour-mark" style="--rotation: 180deg"></div>
+                        <div class="hour-mark" style="--rotation: 210deg"></div>
+                        <div class="hour-mark" style="--rotation: 240deg"></div>
+                        <div class="hour-mark" style="--rotation: 270deg"></div>
+                        <div class="hour-mark" style="--rotation: 300deg"></div>
+                        <div class="hour-mark" style="--rotation: 330deg"></div>
+                    </div>
+
+                    <div class="minute-marks">
+                        <!-- Les marques de minutes seront générées en JS -->
+                    </div>
+
+                    <div class="hour-hand" id="hourHand"></div>
+                    <div class="minute-hand" id="minuteHand"></div>
+                    <div class="second-hand" id="secondHand"></div>
+                    <div class="center-dot"></div>
+                </div>
+            </div>
+
+            <!-- Chronomètre -->
+            <div class="stopwatch" id="stopwatch">
+                <div class="stopwatch-display">
+                    <div class="stopwatch-time">
+                        <span id="swMinutes">00</span>
+                        <span class="separator">:</span>
+                        <span id="swSeconds">00</span>
+                        <span class="separator">:</span>
+                        <span id="swMilliseconds">00</span>
+                    </div>
+                    <div class="stopwatch-laps" id="lapsContainer">
+                        <!-- Les tours seront affichés ici -->
+                    </div>
+                </div>
+                <div class="stopwatch-controls">
+                    <button class="btn" id="startStopBtn">
+                        <i class="fas fa-play"></i>
+                        <span>Démarrer</span>
+                    </button>
+                    <button class="btn" id="lapBtn" disabled>
+                        <i class="fas fa-flag"></i>
+                        <span>Tour</span>
+                    </button>
+                    <button class="btn btn-secondary" id="resetBtn">
+                        <i class="fas fa-undo"></i>
+                        <span>Réinitialiser</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Minuteur -->
+            <div class="timer" id="timer">
+                <div class="timer-setup">
+                    <div class="time-inputs">
+                        <div class="input-group">
+                            <label for="timerHours">Heures</label>
+                            <input type="number" id="timerHours" min="0" max="23" value="0">
+                        </div>
+                        <div class="input-group">
+                            <label for="timerMinutes">Minutes</label>
+                            <input type="number" id="timerMinutes" min="0" max="59" value="5">
+                        </div>
+                        <div class="input-group">
+                            <label for="timerSeconds">Secondes</label>
+                            <input type="number" id="timerSeconds" min="0" max="59" value="0">
+                        </div>
+                    </div>
+                    <div class="timer-presets">
+                        <button class="preset-btn" data-time="300">5 min</button>
+                        <button class="preset-btn" data-time="600">10 min</button>
+                        <button class="preset-btn" data-time="900">15 min</button>
+                        <button class="preset-btn" data-time="1800">30 min</button>
+                        <button class="preset-btn" data-time="3600">1 heure</button>
+                    </div>
+                </div>
+
+                <div class="timer-display">
+                    <div class="timer-time">
+                        <span id="timerDisplay">05:00</span>
+                    </div>
+                    <div class="timer-progress">
+                        <div class="progress-bar" id="timerProgress"></div>
+                    </div>
+                </div>
+
+                <div class="timer-controls">
+                    <button class="btn" id="timerStartBtn">
+                        <i class="fas fa-play"></i>
+                        <span>Démarrer</span>
+                    </button>
+                    <button class="btn btn-secondary" id="timerPauseBtn" disabled>
+                        <i class="fas fa-pause"></i>
+                        <span>Pause</span>
+                    </button>
+                    <button class="btn btn-danger" id="timerStopBtn" disabled>
+                        <i class="fas fa-stop"></i>
+                        <span>Arrêter</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Panneau de contrôle -->
+        <div class="control-panel">
+            <div class="control-section">
+                <h3><i class="fas fa-cog"></i> Affichage</h3>
+                <div class="display-controls">
+                    <label class="toggle">
+                        <input type="checkbox" id="showAnalog" checked>
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Horloge analogique</span>
+                    </label>
+                    <label class="toggle">
+                        <input type="checkbox" id="showSeconds" checked>
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Afficher les secondes</span>
+                    </label>
+                    <label class="toggle">
+                        <input type="checkbox" id="showDate" checked>
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Afficher la date</span>
+                    </label>
+                    <label class="toggle">
+                        <input type="checkbox" id="twelveHour" checked>
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Format 12h</span>
+                    </label>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3><i class="fas fa-palette"></i> Thème</h3>
+                <div class="theme-controls">
+                    <button class="theme-btn active" data-theme="classic">
+                        <i class="fas fa-clock"></i>
+                        <span>Classique</span>
+                    </button>
+                    <button class="theme-btn" data-theme="dark">
+                        <i class="fas fa-moon"></i>
+                        <span>Sombre</span>
+                    </button>
+                    <button class="theme-btn" data-theme="colorful">
+                        <i class="fas fa-palette"></i>
+                        <span>Coloré</span>
+                    </button>
+                    <button class="theme-btn" data-theme="minimal">
+                        <i class="fas fa-circle"></i>
+                        <span>Minimal</span>
+                    </button>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3><i class="fas fa-globe"></i> Fuseau horaire</h3>
+                <div class="timezone-controls">
+                    <select id="timezoneSelect">
+                        <option value="local">Local</option>
+                        <option value="UTC">UTC</option>
+                        <option value="America/New_York">New York</option>
+                        <option value="Europe/London">Londres</option>
+                        <option value="Europe/Paris">Paris</option>
+                        <option value="Asia/Tokyo">Tokyo</option>
+                        <option value="Australia/Sydney">Sydney</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="control-section">
+                <h3><i class="fas fa-volume-up"></i> Sons</h3>
+                <div class="sound-controls">
+                    <label class="toggle">
+                        <input type="checkbox" id="enableSounds">
+                        <span class="toggle-slider"></span>
+                        <span class="toggle-label">Activer les sons</span>
+                    </label>
+                    <button class="btn btn-secondary" id="testSound">
+                        <i class="fas fa-play"></i>
+                        <span>Tester</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Alarmes -->
+        <div class="alarms-section">
+            <h3><i class="fas fa-bell"></i> Alarmes</h3>
+            <div class="alarms-list" id="alarmsList">
+                <div class="no-alarms">
+                    <i class="fas fa-bell-slash"></i>
+                    <p>Aucune alarme définie</p>
+                </div>
+            </div>
+            <button class="btn btn-primary" id="addAlarmBtn">
+                <i class="fas fa-plus"></i>
+                <span>Ajouter une alarme</span>
+            </button>
+        </div>
+
+        <!-- Informations système -->
+        <div class="system-info">
+            <div class="info-item">
+                <i class="fas fa-calendar-alt"></i>
+                <span>Dernière mise à jour: <span id="lastUpdate">00:00:00</span></span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Précision: <span id="precision">1ms</span></span>
+            </div>
+            <div class="info-item">
+                <i class="fas fa-code"></i>
+                <span>Version: 2.0.0</span>
+            </div>
+        </div>
+
+        <!-- Modal alarme -->
+        <div id="alarmModal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h3 id="alarmModalTitle">Nouvelle alarme</h3>
+                    <span class="modal-close" id="alarmModalClose">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="alarm-form">
+                        <div class="time-inputs">
+                            <div class="input-group">
+                                <label for="alarmHours">Heures</label>
+                                <input type="number" id="alarmHours" min="0" max="23" value="8">
+                            </div>
+                            <div class="input-group">
+                                <label for="alarmMinutes">Minutes</label>
+                                <input type="number" id="alarmMinutes" min="0" max="59" value="0">
+                            </div>
+                        </div>
+                        <div class="alarm-options">
+                            <label class="checkbox">
+                                <input type="checkbox" id="alarmRepeat">
+                                <span class="checkmark"></span>
+                                <span>Répéter quotidiennement</span>
+                            </label>
+                            <div class="input-group">
+                                <label for="alarmLabel">Libellé</label>
+                                <input type="text" id="alarmLabel" placeholder="Mon alarme" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" id="alarmCancel">Annuler</button>
+                    <button class="btn btn-primary" id="alarmSave">Enregistrer</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal de notification d'alarme -->
+        <div id="alarmNotification" class="alarm-notification">
+            <div class="alarm-notification-content">
+                <i class="fas fa-bell"></i>
+                <div class="alarm-notification-text">
+                    <h4 id="alarmNotificationTitle">Alarme !</h4>
+                    <p id="alarmNotificationMessage">Il est l'heure !</p>
+                </div>
+                <button class="alarm-dismiss" id="alarmDismiss">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+
+        <script src="script.js"></script>
+    </div>
+</body>
+</html>
